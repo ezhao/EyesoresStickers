@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Eyesores</string>
+    <string name="stickers_label">Stickers:</string>
+    <string name="add_stickers">Add Stickers</string>
+    <string name="clear_stickers">Clear Stickers</string>
+</resources>

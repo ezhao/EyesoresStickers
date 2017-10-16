@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "108044534572",
+    "firebase_url": "https://eyesores-stickers.firebaseio.com",
+    "project_id": "eyesores-stickers",
+    "storage_bucket": "eyesores-stickers.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108044534572:android:a9f9170209c43bc1",
+        "android_client_info": {
+          "package_name": "com.emilyzebra.eyesores"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108044534572-vfkobddqclk781j0js42k4d21h847o41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPFOw5ddZbiwzrehvPA9Sgw2ZFm3QTWY4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
