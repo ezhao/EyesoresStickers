@@ -14,10 +14,10 @@ public class MainActivity extends AppCompatActivity {
 
         final Intent intent = new Intent(MainActivity.this, AppIndexingService.class);
 
-        Button addStickersBtn = findViewById(R.id.addStickersBtn);
-        Button clearStickersBtn = findViewById(R.id.clearStickersBtn);
+        Button addStickersButton = findViewById(R.id.add_stickers_button);
+        Button clearStickersButton = findViewById(R.id.clear_stickers_button);
 
-        addStickersBtn.setOnClickListener(v -> startService(intent.putExtra(AppIndexingService.CREATE_FLAG, true)));
-        clearStickersBtn.setOnClickListener(v -> startService(intent.putExtra(AppIndexingService.CREATE_FLAG, false)));
+        addStickersButton.setOnClickListener(v -> startService(intent.putExtra(AppIndexingService.CREATE_FLAG, true)));
+        clearStickersButton.setOnClickListener(v -> startService(intent.putExtra(AppIndexingService.CREATE_FLAG, false)));
     }
 }

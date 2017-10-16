@@ -1,7 +1,6 @@
 package com.emilyzebra.eyesores;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -31,18 +30,10 @@ class AppIndexingUtil {
     static void clearStickers(final Context context, FirebaseAppIndex firebaseAppIndex) {
         Task<Void> task = firebaseAppIndex.removeAll();
 
-        task.addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(context, SUCCESS_CLEAR, Toast.LENGTH_SHORT).show();
-            }
-        });
-        task.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, FAILED_CLEAR, e);
-                Toast.makeText(context, FAILED_CLEAR, Toast.LENGTH_SHORT).show();
-            }
+        task.addOnSuccessListener(aVoid -> Toast.makeText(context, SUCCESS_CLEAR, Toast.LENGTH_SHORT).show());
+        task.addOnFailureListener(e -> {
+            Log.w(TAG, FAILED_CLEAR, e);
+            Toast.makeText(context, FAILED_CLEAR, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -70,21 +61,12 @@ class AppIndexingUtil {
 
             final int size = indexables.size();
 
-            OnSuccessListener<Void> onSuccessListener = new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Toast.makeText(context, SUCCESS_INSTALL + size, Toast.LENGTH_SHORT)
-                            .show();
-                }
-            };
+            OnSuccessListener<Void> onSuccessListener = aVoid ->
+                    Toast.makeText(context, SUCCESS_INSTALL + size, Toast.LENGTH_SHORT).show();
 
-            OnFailureListener onFailureListener = new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, FAILED_INSTALL, e);
-                    Toast.makeText(context, FAILED_INSTALL, Toast.LENGTH_SHORT)
-                            .show();
-                }
+            OnFailureListener onFailureListener = e -> {
+                Log.d(TAG, FAILED_INSTALL, e);
+                Toast.makeText(context, FAILED_INSTALL, Toast.LENGTH_SHORT).show();
             };
 
             firebaseAppIndex
@@ -97,7 +79,8 @@ class AppIndexingUtil {
         }
     }
 
-    private static List<StickerBuilder> getStickerBuilders(File stickersDir, StickerPackBuilder stickerPackBuilder) throws IOException, FirebaseAppIndexingInvalidArgumentException {
+    private static List<StickerBuilder> getStickerBuilders(File stickersDir, StickerPackBuilder stickerPackBuilder)
+            throws IOException, FirebaseAppIndexingInvalidArgumentException {
         List<StickerBuilder> stickerBuilders = new ArrayList<>();
 
         List<Eyesore> eyesores = EyesoreUtil.createEyesores(stickersDir);

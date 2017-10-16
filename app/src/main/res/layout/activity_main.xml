@@ -19,13 +19,13 @@
             android:text="@string/stickers_label"/>
 
         <Button
-            android:id="@+id/addStickersBtn"
+            android:id="@+id/add_stickers_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/add_stickers"/>
 
         <Button
-            android:id="@+id/clearStickersBtn"
+            android:id="@+id/clear_stickers_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear_stickers"/>
