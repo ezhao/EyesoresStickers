@@ -13,7 +13,6 @@ import com.google.firebase.appindexing.builders.Indexables;
 import com.google.firebase.appindexing.builders.StickerBuilder;
 import com.google.firebase.appindexing.builders.StickerPackBuilder;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,17 +37,15 @@ class AppIndexingUtil {
     }
 
     static void setStickers(final Context context, FirebaseAppIndex firebaseAppIndex) {
-        File stickersDir = new File(context.getFilesDir(), "stickers");
-
         try {
-            Eyesore cover = EyesoreUtil.createCoverEyesore(stickersDir);
+            Eyesore cover = EyesoreUtil.getCover(context);
             StickerPackBuilder stickerPackBuilder = Indexables.stickerPackBuilder()
                     .setName(STICKER_PACK_NAME)
                     .setUrl(cover.getUrl())
                     .setImage(cover.getImage())
                     .setDescription("Indexable description TBD");
 
-            List<StickerBuilder> stickers = getStickerBuilders(stickersDir, stickerPackBuilder);
+            List<StickerBuilder> stickers = getStickerBuilders(context, stickerPackBuilder);
 
             stickerPackBuilder
                     .setHasSticker(stickers.toArray(new StickerBuilder[stickers.size()]));
@@ -79,11 +76,11 @@ class AppIndexingUtil {
         }
     }
 
-    private static List<StickerBuilder> getStickerBuilders(File stickersDir, StickerPackBuilder stickerPackBuilder)
+    private static List<StickerBuilder> getStickerBuilders(Context context, StickerPackBuilder stickerPackBuilder)
             throws IOException, FirebaseAppIndexingInvalidArgumentException {
         List<StickerBuilder> stickerBuilders = new ArrayList<>();
 
-        List<Eyesore> eyesores = EyesoreUtil.createEyesores(stickersDir);
+        List<Eyesore> eyesores = EyesoreUtil.getList(context);
         for (Eyesore eyesore : eyesores) {
             StickerBuilder stickerBuilder = Indexables.stickerBuilder()
                     .setName(STICKER_PACK_NAME)
