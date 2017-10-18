@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -17,6 +18,8 @@ public class MainActivity extends Activity {
     private AppIndexingService appIndexingService;
     private ProgressBar loadingSpinner;
     private TextView successText;
+    private View helpButton;
+    private View gboardGuide;
     private Intent intent;
 
     @Override
@@ -25,6 +28,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         loadingSpinner = findViewById(R.id.loading_spinner);
         successText = findViewById(R.id.success_text);
+        helpButton = findViewById(R.id.help_button);
+        gboardGuide = findViewById(R.id.gboard_guide);
+
         intent = new Intent(this, AppIndexingService.class);
 
         // TODO: 10/17/17 emily handle rotation potentially with the loading spinner
@@ -39,6 +45,20 @@ public class MainActivity extends Activity {
         clearStickersButton.setOnClickListener(v -> {
             startLoading();
             startAndBindService(false);
+        });
+
+        gboardGuide.setVisibility(View.GONE);
+        helpButton.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    gboardGuide.setVisibility(View.GONE);
+                    return true;
+                default:
+                    gboardGuide.setVisibility(View.VISIBLE);
+                    return true;
+
+            }
         });
     }
 
