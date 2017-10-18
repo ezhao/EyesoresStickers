@@ -2,7 +2,6 @@ package com.emilyzebra.eyesores;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -18,25 +17,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 class AppIndexingUtil {
-    private static final String STICKER_PACK_NAME = "Eyesores Stickers";
+
     private static final String TAG = "AppIndexingUtil";
+    private static final String STICKER_PACK_NAME = "Eyesores Stickers";
 
-    private static final String FAILED_CLEAR = "Failed to clear stickers";
-    private static final String FAILED_INSTALL = "Failed to install stickers";
-    private static final String SUCCESS_CLEAR = "Successfully cleared stickers";
-    private static final String SUCCESS_INSTALL = "Successfully installed stickers ";
-
-    static void clearStickers(final Context context, FirebaseAppIndex firebaseAppIndex) {
+    static void clearStickers(FirebaseAppIndex firebaseAppIndex, AppIndexingService.ServiceCallbacks serviceCallbacks) {
         Task<Void> task = firebaseAppIndex.removeAll();
 
-        task.addOnSuccessListener(aVoid -> Toast.makeText(context, SUCCESS_CLEAR, Toast.LENGTH_SHORT).show());
+        task.addOnSuccessListener(aVoid -> serviceCallbacks.onStickerRemoveSuccess());
         task.addOnFailureListener(e -> {
-            Log.w(TAG, FAILED_CLEAR, e);
-            Toast.makeText(context, FAILED_CLEAR, Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "Failed to clear stickers", e);
+            serviceCallbacks.onStickerRemoveFail();
         });
     }
 
-    static void setStickers(final Context context, FirebaseAppIndex firebaseAppIndex) {
+    static void setStickers(final Context context, FirebaseAppIndex firebaseAppIndex, AppIndexingService.ServiceCallbacks serviceCallbacks) {
         try {
             Eyesore cover = EyesoreUtil.getCover(context);
             StickerPackBuilder stickerPackBuilder = Indexables.stickerPackBuilder()
@@ -58,12 +53,14 @@ class AppIndexingUtil {
 
             final int size = indexables.size();
 
-            OnSuccessListener<Void> onSuccessListener = aVoid ->
-                    Toast.makeText(context, SUCCESS_INSTALL + size, Toast.LENGTH_SHORT).show();
+            OnSuccessListener<Void> onSuccessListener = aVoid -> {
+                Log.i(TAG, "Added stickers: " + size);
+                serviceCallbacks.onStickerAddSuccess();
+            };
 
             OnFailureListener onFailureListener = e -> {
-                Log.d(TAG, FAILED_INSTALL, e);
-                Toast.makeText(context, FAILED_INSTALL, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Failed to add stickers", e);
+                serviceCallbacks.onStickerAddFail();
             };
 
             firebaseAppIndex
