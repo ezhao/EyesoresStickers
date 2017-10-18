@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Eyesores</string>
-    <string name="stickers_label">Stickers:</string>
-    <string name="add_stickers">Add Stickers</string>
-    <string name="clear_stickers">Clear Stickers</string>
-    <string name="clear_success">Successfully cleared stickers</string>
+    <string name="add_stickers">Add stickers</string>
+    <string name="clear_stickers">Clear stickers</string>
+    <string name="clear_success">Stickers cleared ✔</string>
+    <string name="drawing_description">Drawing of a group of monsters in a pile</string>
+    <string name="eyesores_logo">Eyesores logo</string>
+    <string name="instagram_logo">Instagram logo</string>
+    <string name="add_success">Stickers added ✔</string>
 </resources>

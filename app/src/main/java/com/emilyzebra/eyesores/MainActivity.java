@@ -10,12 +10,13 @@ import android.os.IBinder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
     private AppIndexingService appIndexingService;
     private ProgressBar loadingSpinner;
+    private TextView successText;
     private Intent intent;
 
     @Override
@@ -23,6 +24,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadingSpinner = findViewById(R.id.loading_spinner);
+        successText = findViewById(R.id.success_text);
         intent = new Intent(this, AppIndexingService.class);
 
         // TODO: 10/17/17 emily handle rotation potentially with the loading spinner
@@ -30,8 +32,14 @@ public class MainActivity extends Activity {
 
         Button addStickersButton = findViewById(R.id.add_stickers_button);
         Button clearStickersButton = findViewById(R.id.clear_stickers_button);
-        addStickersButton.setOnClickListener(v -> startAndBindService(true));
-        clearStickersButton.setOnClickListener(v -> startAndBindService(false));
+        addStickersButton.setOnClickListener(v -> {
+            startLoading();
+            startAndBindService(true);
+        });
+        clearStickersButton.setOnClickListener(v -> {
+            startLoading();
+            startAndBindService(false);
+        });
     }
 
     @Override
@@ -70,12 +78,27 @@ public class MainActivity extends Activity {
         }
     }
 
+    private void startLoading() {
+        if (loadingSpinner == null) {
+            return;
+        }
+        loadingSpinner.setVisibility(View.VISIBLE);
+        successText.setVisibility(View.GONE);
+    }
+
+    private void completeLoading(boolean createFlag) {
+        if (loadingSpinner == null) {
+            return;
+        }
+        loadingSpinner.setVisibility(View.GONE);
+        successText.setText(createFlag ? R.string.add_success : R.string.clear_success);
+        successText.setVisibility(View.VISIBLE);
+    }
+
     private final AppIndexingService.ServiceCallbacks serviceCallbacks = new AppIndexingService.ServiceCallbacks() {
         @Override
         public void onStickerAddSuccess() {
-            if (loadingSpinner != null && loadingSpinner.getVisibility() == View.VISIBLE) {
-                loadingSpinner.setVisibility(View.GONE);
-            }
+            completeLoading(true);
         }
 
         @Override
@@ -85,7 +108,7 @@ public class MainActivity extends Activity {
 
         @Override
         public void onStickerRemoveSuccess() {
-            Toast.makeText(MainActivity.this, getString(R.string.clear_success), Toast.LENGTH_SHORT).show();
+            completeLoading(false);
         }
 
         @Override
