@@ -1,13 +1,10 @@
 package com.emilyzebra.eyesores;
 
 import android.app.Activity;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
+import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -15,10 +12,11 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
+    private static final String FIRST_LAUNCH_PREF = "first_launch_pref";
+
     private AppIndexingService appIndexingService;
     private ProgressBar loadingSpinner;
     private TextView successText;
-    private View helpButton;
     private View gboardGuide;
     private Intent intent;
 
@@ -28,38 +26,40 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         loadingSpinner = findViewById(R.id.loading_spinner);
         successText = findViewById(R.id.success_text);
-        helpButton = findViewById(R.id.help_button);
         gboardGuide = findViewById(R.id.gboard_guide);
-
         intent = new Intent(this, AppIndexingService.class);
 
-        // TODO: 10/17/17 emily handle rotation potentially with the loading spinner
-        startAndBindService(true);
-
         Button addStickersButton = findViewById(R.id.add_stickers_button);
+        addStickersButton.setOnClickListener(v -> startAndBindService(true));
+
         Button clearStickersButton = findViewById(R.id.clear_stickers_button);
-        addStickersButton.setOnClickListener(v -> {
-            startLoading();
-            startAndBindService(true);
-        });
-        clearStickersButton.setOnClickListener(v -> {
-            startLoading();
-            startAndBindService(false);
+        clearStickersButton.setOnClickListener(v -> startAndBindService(false));
+
+        Button helpButton = findViewById(R.id.help_button);
+        helpButton.setOnClickListener(v -> {
+            boolean helpVisible = gboardGuide.getVisibility() == View.VISIBLE;
+            int newVisibility = helpVisible ? View.GONE : View.VISIBLE;
+            gboardGuide.setVisibility(newVisibility);
+            helpButton.setText(helpVisible ? R.string.help : R.string.hide);
         });
 
-        gboardGuide.setVisibility(View.GONE);
-        helpButton.setOnTouchListener((v, event) -> {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    gboardGuide.setVisibility(View.GONE);
-                    return true;
-                default:
-                    gboardGuide.setVisibility(View.VISIBLE);
-                    return true;
-
+        View footer = findViewById(R.id.footer);
+        footer.setOnClickListener(v -> {
+            Uri uriApp = Uri.parse("http://instagram.com/_u/eyesores");
+            Uri uriWeb = Uri.parse("http://instagram.com/eyesores");
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, uriApp).setPackage("com.instagram.android"));
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW, uriWeb));
             }
         });
+
+        // TODO: 10/17/17 emily handle rotation potentially with the loading spinner
+
+        if (isFirstLaunch()) {
+            startAndBindService(true);
+            writeLaunchedPref();
+        }
     }
 
     @Override
@@ -83,6 +83,7 @@ public class MainActivity extends Activity {
     };
 
     private void startAndBindService(boolean createFlag) {
+        startLoading();
         intent.putExtra(AppIndexingService.CREATE_FLAG, createFlag);
         if (appIndexingService != null) {
             startService(intent);
@@ -136,4 +137,16 @@ public class MainActivity extends Activity {
             // TODO: 10/17/17 emily error state
         }
     };
+
+    private void writeLaunchedPref() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(FIRST_LAUNCH_PREF, true);
+        editor.apply();
+    }
+
+    private boolean isFirstLaunch() {
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        return !sharedPref.getBoolean(FIRST_LAUNCH_PREF, false);
+    }
 }

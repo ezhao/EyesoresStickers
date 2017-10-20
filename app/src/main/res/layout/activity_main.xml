@@ -31,31 +31,39 @@
             <ImageView
                 android:id="@+id/gboard_guide"
                 android:layout_width="320dp"
-                android:layout_height="100dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/drawing_description"
-                android:src="@drawable/gboard_guide"/>
+                android:src="@drawable/gboard_guide"
+                android:visibility="gone"/>
 
         </FrameLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:clipToPadding="false"
             android:orientation="horizontal">
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/add_stickers_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/add_stickers"/>
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/clear_stickers_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/clear_stickers"/>
 
             <Button
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:id="@+id/help_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,7 +88,8 @@
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:layout_gravity="center"
-                android:indeterminate="true"/>
+                android:indeterminate="true"
+                android:visibility="gone"/>
 
         </FrameLayout>
 
