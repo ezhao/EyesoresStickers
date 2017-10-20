@@ -26,7 +26,7 @@ class AppIndexingUtil {
 
         task.addOnSuccessListener(aVoid -> serviceCallbacks.onStickerRemoveSuccess());
         task.addOnFailureListener(e -> {
-            Log.w(TAG, "Failed to clear stickers", e);
+            //Log.w(TAG, "Failed to clear stickers", e);
             serviceCallbacks.onStickerRemoveFail();
         });
     }
@@ -51,15 +51,13 @@ class AppIndexingUtil {
             }
             indexables.add(stickerPackBuilder.build());
 
-            final int size = indexables.size();
-
             OnSuccessListener<Void> onSuccessListener = aVoid -> {
-                Log.i(TAG, "Added stickers: " + size);
+                //Log.i(TAG, "Added stickers: " + size);
                 serviceCallbacks.onStickerAddSuccess();
             };
 
             OnFailureListener onFailureListener = e -> {
-                Log.d(TAG, "Failed to add stickers", e);
+                //Log.d(TAG, "Failed to add stickers", e);
                 serviceCallbacks.onStickerAddFail();
             };
 
@@ -69,7 +67,8 @@ class AppIndexingUtil {
                     .addOnFailureListener(onFailureListener);
 
         } catch (IOException | FirebaseAppIndexingInvalidArgumentException e) {
-            Log.e(TAG, "Unable to set stickers", e);
+            //Log.e(TAG, "Unable to set stickers", e);
+            serviceCallbacks.onStickerAddFail();
         }
     }
 
